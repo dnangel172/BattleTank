@@ -2,7 +2,17 @@
 
 #include "TankPlayerController.h"
 
-ATank* ATankPlayerController::GetTankActor() const
+void ATankPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (GetPossessPawn())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController possess : %s"), *GetPossessPawn()->GetName());
+	}
+}
+
+ATank* ATankPlayerController::GetPossessPawn() const
 {
 	return Cast<ATank>(GetPawn());
 }
