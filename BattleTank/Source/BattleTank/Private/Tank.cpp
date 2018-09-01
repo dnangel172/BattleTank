@@ -3,7 +3,8 @@
 
 #include "Tank.h"
 #include "TankAimingComponent.h"
-#include "TanksBarrel.h"
+#include "TankBarrel.h"
+#include "TankTurrent.h"
 
 // Sets default values
 ATank::ATank()
@@ -29,16 +30,24 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-// Called TankAimingComponent
+// Called to TankAimingComponent, Called from BP
+void ATank::SetBarrelComponent(UTankBarrel * BarrelToSet)
+{
+	TankAimingComponent->SetBarrelComponent(BarrelToSet);
+}
+
+// Called to TankAimingComponent, Called from BP
+void ATank::SetTurrentComponent(UTankTurrent* TurrentToSet)
+{
+	TankAimingComponent->SetTurrentComponent(TurrentToSet);
+}
+
+// Called to TankAimingComponent
 void ATank::AimTo(FVector HitLocation)
 {
 	TankAimingComponent->AimTo(HitLocation, LaunchSpeed);
 }
 
-//Called TankAimingComponent
-void ATank::SetBarrelComponent(UTanksBarrel * BarrelToSet)
-{
-	TankAimingComponent->SetBarrelComponent(BarrelToSet);
-}
+
 
 

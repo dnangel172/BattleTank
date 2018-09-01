@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TanksBarrel.h"
+#include "TankBarrel.h"
 #include "Engine/World.h"
 
 
-void UTanksBarrel::Elevate(float RelativeSpeed)
+void UTankBarrel::Elevate(float RelativeSpeed)
 {
 	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, 1);
 	auto ElevationChange = RelativeSpeed * ElevateDegreePerSecond * GetWorld()->DeltaTimeSeconds;

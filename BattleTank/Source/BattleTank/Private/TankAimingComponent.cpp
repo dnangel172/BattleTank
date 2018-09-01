@@ -2,7 +2,8 @@
 
 #include "TankAimingComponent.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "TanksBarrel.h"
+#include "TankBarrel.h"
+#include "TankTurrent.h"
 
 
 // Sets default values for this component's properties
@@ -15,13 +16,21 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-//called from Tank
-void UTankAimingComponent::SetBarrelComponent(UTanksBarrel* BarrelToSet)
+// Called from Tank
+void UTankAimingComponent::SetBarrelComponent(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
 }
 
-//called from Tank throgh BP
+// Called from Tank
+void UTankAimingComponent::SetTurrentComponent(UTankTurrent* TurrentToSet)
+{
+	if (!TurrentToSet) { return; }
+	Turrent = TurrentToSet;
+}
+
+// Called from Tank 
 void UTankAimingComponent::AimTo(FVector HitLocation, float LaunchSpeed)
 {
 	if (!Barrel) { return; } //prt protect
@@ -45,12 +54,8 @@ void UTankAimingComponent::AimTo(FVector HitLocation, float LaunchSpeed)
 		{
 			auto AimDirection = LaunchVelocity.GetSafeNormal(); //從大砲位置到HitLocation的LookDirection
 			MoveBarrel(AimDirection);
-		
 		}
-		else
-		{
-		
-		}
+
 	}
 }
 
@@ -61,5 +66,9 @@ void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 	auto DeltaRotator = AimRotator - BarrelRotator; //大砲需要移動的角度 
 	
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turrent->Rotate(DeltaRotator.Yaw);
 }
+
+
+
 	
