@@ -2,13 +2,13 @@
 
 #include "TankAIController.h"
 #include "Engine/World.h"
+#include "Tank.h"
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	auto PlayerTank = GetPlayerTank();
-	if (PlayerTank)
+	if (GetPlayerTank())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AIController is aiming : %s"), *GetPlayerTank()->GetName());
 	}
@@ -18,14 +18,27 @@ void ATankAIController::BeginPlay()
 	}
 }
 
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	if (GetPlayerTank())
+	{
+		GetPossessPawn()->AimTo(GetPlayerTank()->GetActorLocation()); 
+	}
+
+}
+
 ATank* ATankAIController::GetPossessPawn() const { return Cast<ATank>(GetPawn()); }
 
 ATank* ATankAIController::GetPlayerTank() const
 {
 	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (!PlayerTank) { return nullptr; } //protect ptr
+
 	return Cast<ATank>(PlayerTank);
 }
+
 
 
 
