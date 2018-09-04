@@ -5,11 +5,10 @@
 
 void UTankTrack::SetThrottle(float Throttle)
 {
-	auto ForceApply = GetForwardVector() * Throttle * MaxDrivingForce;
-	auto ForceLocation = GetComponentLocation();
+	auto ForceApply = GetForwardVector() * Throttle * MaxDrivingForce; //施力方向 x,y > 1
+	auto ForceLocation = GetComponentLocation(); //Track Location 施力點
 	auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	RootComponent->AddForceAtLocation(ForceApply, ForceLocation);
-
 }
 
 

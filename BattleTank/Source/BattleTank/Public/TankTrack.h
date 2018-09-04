@@ -9,13 +9,13 @@
 /**
  * 
  */
-UCLASS( meta=(BlueprintSpawnableComponent), ClassGroup=(Custom))
+UCLASS(meta=(BlueprintSpawnableComponent), ClassGroup=(Custom))
 class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 	
 public:
-	// Called from BP
+	// Called from TankMovementComponent and BP
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 	

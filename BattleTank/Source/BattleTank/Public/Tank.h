@@ -33,11 +33,12 @@ public:
 	// Called from BP
 	UFUNCTION(BlueprintCallable, Category = Fire)
 	void Fire();
+
 	
 private:
 	UTankAimingComponent* TankAimingComponent = nullptr;
 	UTankBarrel* Barrel = nullptr;
-	
+
 	// Called to TankAimingComponent from BP
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelComponent(UTankBarrel* BarrelToSet);

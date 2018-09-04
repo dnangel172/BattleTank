@@ -6,15 +6,6 @@
 #include "Tank.h" //Tank Actor
 
 
-void ATankPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-	if (GetPossessPawn())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController possess : %s"), *GetPossessPawn()->GetName());
-	}
-}
-
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

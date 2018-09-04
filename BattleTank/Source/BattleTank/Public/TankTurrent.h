@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS( meta=(BlueprintSpawnableComponent), ClassGroup=(Custom))
+UCLASS(meta=(BlueprintSpawnableComponent), ClassGroup=(Custom), HideCategories=("Collision"))
 class BATTLETANK_API UTankTurrent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
@@ -18,6 +18,6 @@ public:
 	void Rotate(float RelativeSpeed);
 	
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float RotationDegreePerSecond = 30;
 };
