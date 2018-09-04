@@ -32,7 +32,7 @@ void ATankPlayerController::AimTo()
 	{
 		GetPossessPawn()->AimTo(HitLocation);
 	}
-
+	
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
