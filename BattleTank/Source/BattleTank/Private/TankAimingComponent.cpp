@@ -1,39 +1,52 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h" //SuggestVelocity
+#include "Engine/World.h"
 #include "TankBarrel.h"
 #include "TankTurrent.h"
+#include "Projectile.h"
 
 
-// Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
-// Called from Tank
-void UTankAimingComponent::SetBarrelComponent(UTankBarrel* BarrelToSet)
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-	if (!BarrelToSet) { return; }
+	if (ReloadTime > (FPlatformTime::Seconds() - LastTime))
+	{
+		FireState = EFireState::Reload;
+	}
+	else if (IsBarrelMove())
+	{
+		FireState = EFireState::Aim;
+	}
+	else
+	{
+		FireState = EFireState::Lock;
+	}
+}
+
+void UTankAimingComponent::initialize(UTankBarrel* BarrelToSet, UTankTurrent* TurrentToSet)
+{
+	if (!ensure(BarrelToSet && TurrentToSet)) { return; }
 	Barrel = BarrelToSet;
-}
-
-// Called from Tank
-void UTankAimingComponent::SetTurrentComponent(UTankTurrent* TurrentToSet)
-{
-	if (!TurrentToSet) { return; }
 	Turrent = TurrentToSet;
 }
 
-// Called from Tank 
-void UTankAimingComponent::AimTo(FVector HitLocation, float LaunchSpeed)
+bool UTankAimingComponent::IsBarrelMove()
 {
-	if (!Barrel) { return; } //prt protect
+	if (!ensure(Barrel)) { return false; }
+	FVector BarrelForwardDirection = Barrel->GetForwardVector();
+	return (!BarrelForwardDirection.Equals(AimDirection, 0.01f)); //Equals = 沒有在移動(false)
+}
+
+// Called from PlayerController
+void UTankAimingComponent::AimTo(FVector HitLocation)
+{
+	if (!ensure(Barrel && Turrent)) { return; }
 	{
 		FVector LaunchVelocity;
 		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -52,14 +65,13 @@ void UTankAimingComponent::AimTo(FVector HitLocation, float LaunchSpeed)
 		
 		if (HaveAimSolution)
 		{
-			auto AimDirection = LaunchVelocity.GetSafeNormal(); //從大砲位置到HitLocation的LookDirection
-			MoveBarrel(AimDirection);
+			AimDirection = LaunchVelocity.GetSafeNormal(); //從大砲位置到HitLocation的LookDirection
+			MoveBarrelAndTurrent();
 		}
-
 	}
 }
 
-void UTankAimingComponent::MoveBarrel(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelAndTurrent()
 {
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation(); //取得大砲的初始角度(Pitch, Yaw, Roll)
 	auto AimRotator = AimDirection.Rotation(); //大砲看的方向的角度(Pitch, Yaw, Roll)
@@ -69,6 +81,21 @@ void UTankAimingComponent::MoveBarrel(FVector AimDirection)
 	Turrent->Rotate(DeltaRotator.Yaw);
 }
 
+// Called from BP
+void UTankAimingComponent::Fire()
+{
+	if (FireState != EFireState::Reload)
+	{
+		if (!ensure(Barrel && ProjectileBP)) { return; }
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>
+			(
+				ProjectileBP, //Spawn的Actor, 在BP選擇了
+				Barrel->GetSocketLocation(FName("Projectile")), //砲彈的出生位置
+				Barrel->GetSocketRotation(FName("Projectil")) //砲彈的方向
+			);
+		Projectile->Launch(LaunchSpeed);
+		LastTime = FPlatformTime::Seconds();
+	}
+}
 
 
-	

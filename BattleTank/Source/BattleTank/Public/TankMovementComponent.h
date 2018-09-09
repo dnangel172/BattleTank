@@ -7,7 +7,6 @@
 #include "TankMovementComponent.generated.h"
 
 class UTankTrack;
-
 /**
  * 
  */
@@ -18,15 +17,21 @@ class BATTLETANK_API UTankMovementComponent : public UNavMovementComponent
 
 public:
 	// Called from BP
-	UFUNCTION(BlueprintCallable, Category = Input)
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void initilize(UTankTrack* Track_LToSet, UTankTrack* Track_RToSet);
+
+	// Called from BP
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	void MoveForward(float Axis);
 
 	// Called from BP
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void initilize(UTankTrack* Track_LToSet, UTankTrack* Track_RToSet);
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void MoveRight(float Axis);
 
 private:
 	UTankTrack* Track_L;
 	UTankTrack* Track_R;
-	
+
+	// Called from the pathfinding logic by th AIController no need to public
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 };

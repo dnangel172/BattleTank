@@ -9,7 +9,6 @@
 /**
  * 
  */
-
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), Hidecategories = ("Collision"))
 class BATTLETANK_API UTankBarrel : public UStaticMeshComponent
 {
@@ -17,9 +16,8 @@ class BATTLETANK_API UTankBarrel : public UStaticMeshComponent
 	
 	
 public:
-	//Called from TankAimingComponent
+	// Called from TankAimingComponent
 	void Elevate(float RelativeSpeed);
-	
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)

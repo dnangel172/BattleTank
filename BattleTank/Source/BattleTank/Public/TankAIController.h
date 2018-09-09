@@ -13,8 +13,8 @@ class BATTLETANK_API ATankAIController : public AAIController
 	GENERATED_BODY()
 
 private: 
-	virtual void Tick(float DeltaTime) override;	//沒有繼承Class 可以放private
+	virtual void Tick(float DeltaTime) override; // 沒有繼承Class 可以放private
 	
-	
+	float AcceptanceRadius = 3000; // TODO 設定AI距離半徑
 	
 };

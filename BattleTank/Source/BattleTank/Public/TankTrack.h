@@ -15,12 +15,15 @@ class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
-	// Called from TankMovementComponent and BP
-	UFUNCTION(BlueprintCallable, Category = Input)
+	// Called from TankMovementComponent
 	void SetThrottle(float Throttle);
 	
 private:
-	//mass * accelerate
+	UTankTrack();
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+	//mass * accelerate = 400000 * 100
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float MaxDrivingForce = 400000; 
+	float MaxDrivingForce = 40000000;
 };

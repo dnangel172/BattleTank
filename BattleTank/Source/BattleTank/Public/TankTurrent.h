@@ -15,6 +15,7 @@ class BATTLETANK_API UTankTurrent : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
+	// Called from TankAimComp.
 	void Rotate(float RelativeSpeed);
 	
 private:

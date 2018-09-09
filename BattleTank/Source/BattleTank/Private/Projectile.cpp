@@ -14,7 +14,7 @@ AProjectile::AProjectile()
 	ProjectileMovementComponent->bAutoActivate = false;
 }
 
-// Called from Tank
+// Called from AimingComp.
 void AProjectile::Launch(float Speed)
 {
 	ProjectileMovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed); //砲彈方向 = 大砲方向
