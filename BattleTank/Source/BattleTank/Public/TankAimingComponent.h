@@ -34,10 +34,10 @@ public:
 
 	void AimTo(FVector HitLocation); 
 
-
-
 	UFUNCTION(BlueprintCallable, Category= "Fire")
 	void Fire();
+
+	EFireState GetFireState() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")

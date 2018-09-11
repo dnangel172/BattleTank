@@ -13,6 +13,8 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+EFireState UTankAimingComponent::GetFireState() const { return FireState; }
+
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	if (ReloadTime > (FPlatformTime::Seconds() - LastTime))
@@ -40,7 +42,7 @@ bool UTankAimingComponent::IsBarrelMove()
 {
 	if (!ensure(Barrel)) { return false; }
 	FVector BarrelForwardDirection = Barrel->GetForwardVector();
-	return (!BarrelForwardDirection.Equals(AimDirection, 0.01f)); //Equals = 沒有在移動(false)
+	return (!BarrelForwardDirection.Equals(AimDirection, 0.05f)); //Equals = 沒有在移動(false)
 }
 
 // Called from PlayerController
@@ -50,7 +52,7 @@ void UTankAimingComponent::AimTo(FVector HitLocation)
 	{
 		FVector LaunchVelocity;
 		FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-		bool HaveAimSolution = UGameplayStatics::SuggestProjectileVelocity
+		bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity
 		(
 			this,
 			LaunchVelocity, //out parameter	
@@ -63,7 +65,7 @@ void UTankAimingComponent::AimTo(FVector HitLocation)
 			ESuggestProjVelocityTraceOption::DoNotTrace
 		);
 		
-		if (HaveAimSolution)
+		if (bHaveAimSolution)
 		{
 			AimDirection = LaunchVelocity.GetSafeNormal(); //從大砲位置到HitLocation的LookDirection
 			MoveBarrelAndTurrent();
@@ -78,7 +80,17 @@ void UTankAimingComponent::MoveBarrelAndTurrent()
 	auto DeltaRotator = AimRotator - BarrelRotator; //大砲需要移動的角度 
 	
 	Barrel->Elevate(DeltaRotator.Pitch);
-	Turrent->Rotate(DeltaRotator.Yaw);
+
+	UE_LOG(LogTemp, Warning, TEXT("%f"), DeltaRotator.Yaw)
+		if (FMath::Abs(DeltaRotator.Yaw) > 180)
+		{
+			Turrent->Rotate(-(DeltaRotator.Yaw));
+		}
+		else
+		{
+			Turrent->Rotate(DeltaRotator.Yaw);
+		}
+
 }
 
 // Called from BP

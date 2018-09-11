@@ -14,7 +14,12 @@ void ATankAIController::Tick(float DeltaTime)
 	{
 		MoveToActor(PlayerTank, AcceptanceRadius); // Call Pawn->NavMovementComponent µM«ácall requestdirectmove
 		AimComp->AimTo(PlayerTank->GetActorLocation());
-		AimComp->Fire();
+
+		if (AimComp->GetFireState() == EFireState::Lock)
+		{
+			AimComp->Fire();
+		}
+		
 	}
 }
 
